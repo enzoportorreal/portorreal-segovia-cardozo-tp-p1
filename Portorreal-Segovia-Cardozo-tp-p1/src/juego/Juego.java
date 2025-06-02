@@ -49,7 +49,7 @@ public class Juego extends InterfaceJuego {
 	
 	private void reiniciarJuego() {
 		// Reiniciar gondolf
-		gondolf = new Gondolf(700, 500); // posición inicial en el centro
+		gondolf = new Gondolf(550, 500); // posición inicial en el centro
 
 		// Resetear contadores
 		
