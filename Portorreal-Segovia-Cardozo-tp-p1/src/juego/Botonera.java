@@ -13,7 +13,6 @@ public class Botonera {
 	private Image explosion1;
 	private Image explosion2;
 	private Image explosion3;
-	private double radio = 60; // valor ajustable
 
 	public Botonera(double x, double y) {
 		this.x = x;
@@ -71,10 +70,6 @@ public class Botonera {
 
 	public void setAlto(double alto) {
 		this.alto = alto;
-	}
-
-	public double getRadio() {
-		return radio;
 	}
 
 }

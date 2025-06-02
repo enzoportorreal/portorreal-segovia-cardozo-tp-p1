@@ -10,7 +10,6 @@ public class Murcielago {
 	private double y;
 	private double ancho;
 	private double alto;
-	private String salida; // "arriba", "abajo", "izquierda", "derecha"
 	private boolean activo;
 	private Image imagenMurcielago;
 
@@ -19,7 +18,6 @@ public class Murcielago {
 		this.y = y;
 		this.ancho = ancho;
 		this.alto = alto;
-		this.salida = salida;
 		this.activo = false;
 		this.imagenMurcielago = Herramientas.cargarImagen("Imagenes TP Programacion 1/Murcielago 2.gif");
 	}
