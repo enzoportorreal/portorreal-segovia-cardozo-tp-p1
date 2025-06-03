@@ -25,7 +25,7 @@ public class Juego extends InterfaceJuego {
 	private double explosionX = -100;
 	private double explosionY = -100;
 	private int duracionExplosion = 0;
-	private static final int duracionMaximaExplosion = 30; // 30 ticks
+	private static final int duracionMaximaExplosion = 30; // 30 ticks = aprox. 0.5 segundos
 	private Obstaculos[] rocas;
 	private boolean juegoIniciado = false;
 	private final int RADIO_FUEGO = 60;
@@ -41,15 +41,15 @@ public class Juego extends InterfaceJuego {
 	private int contadorMostrarImagen = 0;
 	private final int DURACION_IMAGEN_MANA = 90; // duración en frames (~3 segundos si 30 fps)
 	private Image manaInsuficiente;
-	private int oleada = 1;
 	private Image oleada1;
 	private Image oleada2;
 	private Image oleada3;
 	private Image oleada4;
-	
+	private int oleada = 1;
+
 	private void reiniciarJuego() {
 		// Reiniciar gondolf
-		gondolf = new Gondolf(550, 500); // posición inicial en el centro
+		gondolf = new Gondolf(700, 500); // posición inicial en el centro
 
 		// Resetear contadores
 		
@@ -110,6 +110,7 @@ public class Juego extends InterfaceJuego {
 		explosionX = -100;
 		explosionY = -100;
 		duracionExplosion = 0;
+		oleada = 1;
 
 		// Estado general
 		juegoIniciado = true;
@@ -147,10 +148,10 @@ public class Juego extends InterfaceJuego {
 				.cargarImagen("Imagenes TP Programacion 1/BotoneraVenenoSeleccionado.gif")
 				.getScaledInstance(300, 1000, 0);
 		
-		this.oleada1 = Herramientas.cargarImagen("Imagenes TP Programacion 1/oleada1.png").getScaledInstance(250, 500, 0);
-		this.oleada2= Herramientas.cargarImagen("Imagenes TP Programacion 1/oleada2.png").getScaledInstance(250, 500, 0);
-		this.oleada3= Herramientas.cargarImagen("Imagenes TP Programacion 1/oleada3.png").getScaledInstance(250, 500, 0);
-		this.oleada4= Herramientas.cargarImagen("Imagenes TP Programacion 1/oleada4.png").getScaledInstance(250, 500, 0);
+		this.oleada1 = Herramientas.cargarImagen("Imagenes TP Programacion 1/oleada1.png").getScaledInstance(250, 500, Image.SCALE_SMOOTH);
+		this.oleada2= Herramientas.cargarImagen("Imagenes TP Programacion 1/oleada2.png").getScaledInstance(250, 500, Image.SCALE_SMOOTH);
+		this.oleada3= Herramientas.cargarImagen("Imagenes TP Programacion 1/oleada3.png").getScaledInstance(250, 500, Image.SCALE_SMOOTH);
+		this.oleada4= Herramientas.cargarImagen("Imagenes TP Programacion 1/oleada4.png").getScaledInstance(250, 500, Image.SCALE_SMOOTH);
 
 		this.manaInsuficiente = Herramientas.cargarImagen("Imagenes TP Programacion 1/ManaInsuficiente.png")
 				.getScaledInstance(150, 250, Image.SCALE_SMOOTH);
@@ -166,7 +167,7 @@ public class Juego extends InterfaceJuego {
 					"abajo");
 		}
 
-		// Inicializar explosiones
+		// Inicializar explosiones (ANTES del for)
 		this.explosion1 = new Botonera(0, 0);
 		this.explosion2 = new Botonera(0, 0);
 		this.explosion3 = new Botonera(0, 0);
@@ -180,7 +181,7 @@ public class Juego extends InterfaceJuego {
 		double margenBorde = 100;
 
 		while (cantidadRocas < rocas.length && intentos < intentosMaximos) {
-			// Genera coordenadas aleatorias dentro del área jugable con margen 
+			// Genera coordenadas aleatorias dentro del área jugable con margen
 			double x = Math.random() * (1100 - 2 * margenBorde) + margenBorde;
 			double y = Math.random() * (1000 - 2 * margenBorde) + margenBorde;
 
@@ -217,7 +218,10 @@ public class Juego extends InterfaceJuego {
 	}
 
 	public void tick() {
-	
+		if (entorno.sePresionoBoton(entorno.BOTON_IZQUIERDO)) {
+			System.out.println("x=" + entorno.mouseX() + "y= " + entorno.mouseY());
+		}
+
 		if (!juegoIniciado) {
 			entorno.dibujarImagen(menu, entorno.ancho() / 2, entorno.alto() / 2, 0, 1);
 			if (entorno.mouseX() >= 870 && entorno.mouseX() <= 1180 && entorno.mouseY() >= 650
@@ -282,14 +286,18 @@ public class Juego extends InterfaceJuego {
 		}
 		gondolf.dibujar(entorno);
 		if (gondolf.colisionaConRoca(rocas, gondolf.getX(), gondolf.getY())) {
+			// System.out.println("¡Gondolf colisionó con una roca!");
 		}
 		if (gondolf.colisionaEnemigo(murcielagos)) {
 			murcielagosActivos--;
 			totalMurcielagos--;
+			// System.out.println("¡Gondolf fue golpeado por un murciélago!");
 		}
 		if (gondolf.getVida() == 0) {
 			gondolf = null;
 		}
+
+		// System.out.println("Vida de Gondolf: " + gondolf.getVida());
 
 //////////////////////////////Botonera///////////////////////////////		
 		// explosion
@@ -311,7 +319,7 @@ public class Juego extends InterfaceJuego {
 					puedeLanzar = false;
 					mostrarImagenMana = true;
 					contadorMostrarImagen = 0;
-				} else if (tipoExplosionSeleccionada == 3 && gondolf.getMana() < 50) {
+				} else if (tipoExplosionSeleccionada == 3 && gondolf.getMana() < 20) {
 					puedeLanzar = false;
 					mostrarImagenMana = true;
 					contadorMostrarImagen = 0;
@@ -437,15 +445,15 @@ public class Juego extends InterfaceJuego {
                 murcielagosActivos++;
             }
             if (totalMurcielagos < 150) {
-            	oleada = 2;
+            	oleada=2;
                 maxMurcielagosEnPantalla = 9 ;
             }
             if (totalMurcielagos < 100) {
-            	oleada = 3;
+            	oleada=3;
                 maxMurcielagosEnPantalla = 12;
             }
             if (totalMurcielagos < 50) {
-            	oleada = 4;
+            	oleada=4;
                 maxMurcielagosEnPantalla = 15;
             }
         }
@@ -488,6 +496,7 @@ public class Juego extends InterfaceJuego {
 		if(oleada==4) {
 			entorno.dibujarImagen(oleada4, 1250, 105, 0);;
 		}
+		
 		if (mostrarImagenMana) {
 			entorno.dibujarImagen(manaInsuficiente, 1250, 950, 0);
 		}
